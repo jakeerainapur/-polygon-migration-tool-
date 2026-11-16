@@ -1,0 +1,59 @@
+services:
+  - type: web
+    name: polygon-migration
+    runtime: python
+    region: singapore
+    plan: free
+    buildCommand: pip install -r requirement.txt && python PolygonMigration/manage.py collectstatic --no-input
+    startCommand: cd PolygonMigration && python manage.py migrate && gunicorn PolygonMigration.wsgi:application --bind 0.0.0.0:$PORT
+    healthCheckPath: /users/login/
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: DB_NAME
+        fromDatabase:
+          name: polygon-migration-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: polygon-migration-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: polygon-migration-db
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: polygon-migration-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: polygon-migration-db
+          property: port
+      - key: POLYGON_API_KEY
+        sync: false
+      - key: POLYGON_API_SECRET
+        sync: false
+      - key: AZURE_STORAGE_ACCOUNT_URL
+        sync: false
+      - key: AZURE_TENANT_ID
+        sync: false
+      - key: AZURE_CLIENT_ID
+        sync: false
+      - key: AZURE_USERNAME
+        sync: false
+      - key: AZURE_PASSWORD
+        sync: false
+      - key: AZURE_CONTAINER_NAME
+        sync: false
+
+databases:
+  - name: polygon-migration-db
+    databaseName: polygon_migration
+    user: polygon_migration
+    region: singapore
+    plan: free

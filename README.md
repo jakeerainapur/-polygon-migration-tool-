@@ -162,6 +162,17 @@ Access the app at [http://localhost:8000/](http://localhost:8000/)
 | REDIS_PASSWORD            | Redis password (optional)                   |
 | REDIS_SSL                 | Redis SSL (optional, True/False)            |
 
+## Deploy to Render
+
+This repository includes a Render Blueprint in `render.yaml`. In Render, choose **New → Blueprint**, connect this public repository, and deploy the blueprint. It creates a free web service and PostgreSQL database. The free web service may sleep when idle, and the free database is temporary; don't use it for important production data.
+
+During setup, Render asks for Polygon and Azure environment variables. Enter newly rotated credentials in Render's environment settings—never commit them to this repository. After deployment, create the first staff account using the Render Shell:
+
+```bash
+cd PolygonMigration
+python manage.py createsuperuser
+```
+
 ## Project Structure
 ```
 PolygonMigration/
